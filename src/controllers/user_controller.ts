@@ -6,9 +6,9 @@ import pool from "../database/db_connect";
 require("dotenv").config();
 
 export const generateToken = async(req: Request, response: Response): Promise <Response> => {
-    const userName = req.body.username;
+    const username = req.body.username;
     const password = req.body.password;
-    const query = await pool.query('SELECT * FROM users WHERE username = $1 AND password = $2', [userName, password]);
+    const query = await pool.query('SELECT * FROM users_login WHERE username = $1 AND password = $2', [username, password]);
     const user = query.rows[0];
     if (query.rowCount !== null  && query.rowCount > 0){
     const accessToken = jwt.sign(user, `${process.env.CLAVE_JWT}`, {expiresIn: "1h",});
@@ -19,17 +19,25 @@ export const generateToken = async(req: Request, response: Response): Promise <R
 };
 
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
-    const {userName, password, email} = req.body;
-    if (userName !== null && password !== null && email !== null){
+    const { first_name, second_name, first_last_name, second_last_name, city, email, phone_mobile, user_name, password } = req.body;
+
+    if (first_name && second_name && first_last_name && second_last_name && city && email && phone_mobile && user_name && password) {
         try {
-            await pool.query('INSERT INTO users (username, password, email) values ($1, $2, $3)',
-                [userName, password, email]
+            await pool.query('INSERT INTO users_register (first_name, second_name, first_last_name, second_last_name, city, email, phone_mobile, user_name, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+                [first_name, second_name, first_last_name, second_last_name, city, email, phone_mobile, user_name, password]
             );
             return res.status(201).json({
                 message: 'User created successfully',
                 category: {
-                    userName,
+                    first_name,
+                    second_name,
+                    first_last_name,
+                    second_last_name,
+                    city,
                     email,
+                    phone_mobile,
+                    user_name,
+                    password
                 }
             });
         } catch (error) {

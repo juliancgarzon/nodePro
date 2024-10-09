@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "sh -c \"$(curl -fsSL https://github.com/juliancgarzon/nodeProject1.git)\""
+    "url": "sh -c \"$(curl -fsSL https://github.com/juliancgarzon/nodePro.git)\""
   },
   "author": "julian garzon",
   "license": "ISC",
